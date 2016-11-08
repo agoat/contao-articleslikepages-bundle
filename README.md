@@ -1,4 +1,4 @@
-# contao-directarticleurls-bundle
+# Direct (short) article urls
 ---
 Contao 4 extension to remove the /articles/ keyword from the url when calling an article directly.
 
