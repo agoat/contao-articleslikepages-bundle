@@ -1,6 +1,6 @@
 # contao-articleslikepages-bundle
 ---
-Contao 4 extension to stripe the articles keyword in the url when calling an article
+Contao 4 extension to remove the /articles/ keyword from the url when calling an article directly.
 
 --
 Before:
