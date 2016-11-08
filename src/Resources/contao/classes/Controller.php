@@ -12,7 +12,7 @@
  */
 
 
-namespace Agoat\DirectArticleUrls;
+namespace Agoat\ArticleUrls;
  
 use Contao\Controller;
 
