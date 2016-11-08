@@ -1,4 +1,4 @@
-# contao-articleslikepages-bundle
+# contao-directarticleurls-bundle
 ---
 Contao 4 extension to remove the /articles/ keyword from the url when calling an article directly.
 
