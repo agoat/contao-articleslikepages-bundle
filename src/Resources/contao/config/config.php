@@ -15,6 +15,6 @@
  /**
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['getPageIdFromUrl'][] = array('Agoat\\DirectArticleUrls\\Controller','getArticlesAsPages');
-$GLOBALS['TL_HOOKS']['generateFrontendUrl'][] = array('Agoat\\DirectArticleUrls\\Controller','stripArticlesParameter');
+$GLOBALS['TL_HOOKS']['getPageIdFromUrl'][] = array('Agoat\\ArticleUrls\\Controller','getArticlesAsPages');
+$GLOBALS['TL_HOOKS']['generateFrontendUrl'][] = array('Agoat\\ArticleUrls\\Controller','stripArticlesParameter');
 
