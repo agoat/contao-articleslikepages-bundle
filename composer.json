@@ -1,7 +1,7 @@
 {
     "name": "agoat/articleurls-bundle",
     "type": "contao-bundle",
-    "description": "Contao Direct Article Url extension",
+    "description": "Contao Article Urls extension",
     "license": "LGPL-3.0+",
     "authors": [
         {
