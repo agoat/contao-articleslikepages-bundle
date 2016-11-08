@@ -1,7 +1,7 @@
 {
     "name": "agoat/directarticleurls-bundle",
     "type": "contao-bundle",
-    "description": "Contao SSL Domains extension",
+    "description": "Contao Direct Article Url extension",
     "license": "LGPL-3.0+",
     "authors": [
         {
@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Agoat\\DirectArticleUrls\\": "src/"
+            "Agoat\\DirectArticleUrlsBundle\\": "src/"
         },
         "classmap": [
             "src/Resources/contao"
@@ -33,7 +33,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Agoat\\DirectArticleUrls\\Test\\": "tests/"
+            "Agoat\\DirectArticleUrlsBundle\\Test\\": "tests/"
         }
     }
 }
