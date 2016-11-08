@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
  
-namespace Agoat\ArticleUrls;
+namespace Agoat\ArticleUrlsBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
