@@ -14,11 +14,9 @@
 
 namespace Agoat\ArticleUrls;
  
-use Contao\Controller;
 
 
-
-class Controller extends Controller
+class Controller extends \Contao\Controller
 {
 	
 	// Search for articles if no 
