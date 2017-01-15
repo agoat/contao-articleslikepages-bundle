@@ -42,7 +42,7 @@ class Controller extends \Contao\Controller
 		// Find article for root pages when the url scheme looks like domain.tld/article
 		else if ($arrFragments[1] == '' && $arrFragments[2] == '' && \PageModel::findByIdOrAlias($arrFragments[0]) === null)
 		{
-			list($strSection, $strArticle) = explode(':', $arrFragments[2]);
+			list($strSection, $strArticle) = explode(':', $arrFragments[0]);
 			
 			if ($strArticle === null)
 			{
