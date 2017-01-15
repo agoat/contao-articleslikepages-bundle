@@ -19,13 +19,20 @@ namespace Agoat\ArticleUrls;
 class Controller extends \Contao\Controller
 {
 	
-	// Search for articles if no 
+	// Search for articles
 	public function getArticlesAsPages ($arrFragments)
 	{
 		// Find article for pages when the url scheme looks like domain.tld/page/article
 		if ($arrFragments[1] == 'auto_item' && $arrFragments[2] != '')
 		{
-			$objArticle = \ArticleModel::findPublishedByIdOrAliasAndPid($arrFragments[2], false);
+			list($strSection, $strArticle) = explode(':', $arrFragments[2]);
+			
+			if ($strArticle === null)
+			{
+				$strArticle = $strSection;
+			}
+			
+			$objArticle = \ArticleModel::findPublishedByIdOrAliasAndPid($strArticle, false);
 
 			if ($objArticle !== null)
 			{
@@ -35,7 +42,14 @@ class Controller extends \Contao\Controller
 		// Find article for root pages when the url scheme looks like domain.tld/article
 		else if ($arrFragments[1] == '' && $arrFragments[2] == '' && \PageModel::findByIdOrAlias($arrFragments[0]) === null)
 		{
-			$objArticle = \ArticleModel::findPublishedByIdOrAliasAndPid($arrFragments[0], false);
+			list($strSection, $strArticle) = explode(':', $arrFragments[2]);
+			
+			if ($strArticle === null)
+			{
+				$strArticle = $strSection;
+			}
+			
+			$objArticle = \ArticleModel::findPublishedByIdOrAliasAndPid($strArticle, false);
 			$objPage = \PageModel::findById($objArticle->pid);
 			
 			if ($objArticle !== null)
@@ -52,7 +66,7 @@ class Controller extends \Contao\Controller
 	// Remove the articles key word from the url
 	public function stripArticlesParameter ($arrRow, $strParams, $strUrl)
 	{
-		return str_replace(array('index/articles/', 'articles/'), '', $strUrl);
+		return preg_replace('/(index\/)?articles\//', '', $strUrl);
 	}
 
 }
