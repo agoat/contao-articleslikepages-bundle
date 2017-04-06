@@ -34,28 +34,43 @@ class tl_article_articleurls extends Backend
 	 */
 	public function checkAlias($varValue, DataContainer $dc)
 	{
-		$db = Database::getInstance();
-		
-		$objAlias = $db->prepare("SELECT id FROM tl_page WHERE alias=?")
-					   ->execute($varValue);
+		$colPages = \PageModel::findByAlias($varValue);
 
-		// Check whether the page alias exists
-		if ($objAlias->numRows > 0)
+		// No page alias at all
+		if (null === $colPages)
 		{
-			if ($varValue == StringUtil::generateAlias($dc->activeRecord->title))
-			{
-				$varValue .= '-' . $dc->id;
-			}
-			else if ($varValue == StringUtil::generateAlias($dc->activeRecord->title.'-'.$dc->activeRecord->id))
-			{
-				$varValue = 'article-' . $varValue;
-			}
-			else
-			{
-				throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));				
-			}
+			return $varValue;
 		}
 		
+		$objArticle = \ArticleModel::findById($dc->id);
+	
+		if (null === $objArticle)
+		{
+			return $varValue;
+		}
+
+		foreach ($colPages as $objPage)
+		{
+			$objArticlePage = \PageModel::findWithDetails($objArticle->pid);
+
+			// Page alias exist in the same root
+			if ($objArticlePage->rootId == $objPage->loadDetails()->rootId)
+			{
+				if ($varValue == StringUtil::generateAlias($dc->activeRecord->title))
+				{
+					$varValue .= '-' . $dc->id;
+				}
+				else if ($varValue == StringUtil::generateAlias($dc->activeRecord->title.'-'.$dc->activeRecord->id))
+				{
+					$varValue = 'article-' . $varValue;
+				}
+				else
+				{
+					throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));				
+				}
+			}
+	
+		}
 		return $varValue;
 	}
 }
