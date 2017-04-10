@@ -15,6 +15,16 @@
 // Additional save callback for the alias
 $GLOBALS['TL_DCA']['tl_page']['fields']['alias']['save_callback'][] = array('tl_page_articleurls', 'checkAlias');
 
+// Replace the generateArticle callback
+foreach ($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'] as &$callback)
+{
+	if ($callback[0] == 'tl_page' && $callback[1] == 'generateArticle')
+	{
+		$callback[0] = 'tl_page_articleurls';
+	}
+}
+unset ($callback);
+
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -77,4 +87,64 @@ class tl_page_articleurls extends Backend
 			
 		return $varValue;
 	}
+	
+	/**
+	 * Automatically create an article in the main column of a new page
+	 *
+	 * @param DataContainer $dc
+	 */
+	public function generateArticle(DataContainer $dc)
+	{
+		// Return if there is no active record (override all)
+		if (!$dc->activeRecord)
+		{
+			return;
+		}
+
+		// No title or not a regular page
+		if ($dc->activeRecord->title == '' || !in_array($dc->activeRecord->type, array('regular', 'error_403', 'error_404')))
+		{
+			return;
+		}
+
+		/** @var Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface $objSessionBag */
+		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
+
+		$new_records = $objSessionBag->get('new_records');
+
+		// Not a new page
+		if (!$new_records || (is_array($new_records[$dc->table]) && !in_array($dc->id, $new_records[$dc->table])))
+		{
+			return;
+		}
+
+		// Check whether there are articles (e.g. on copied pages)
+		$objTotal = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_article WHERE pid=?")
+								   ->execute($dc->id);
+
+		if ($objTotal->count > 0)
+		{
+			return;
+		}
+
+		$this->import('BackendUser', 'User');
+	
+		// Create article
+		$arrSet['pid'] = $dc->id;
+		$arrSet['sorting'] = 128;
+		$arrSet['tstamp'] = time();
+		$arrSet['author'] = $this->User->id;
+		$arrSet['inColumn'] = 'main';
+		$arrSet['title'] = $dc->activeRecord->title;
+		$arrSet['alias'] = str_replace('/', '-', $dc->activeRecord->alias); // see #5168
+		$arrSet['published'] = $dc->activeRecord->published;
+
+		$this->Database->prepare("INSERT INTO tl_article %s")->set($arrSet)->execute();
+		
+		// Add id to article alias
+		$objArticle = $this->Database->prepare("UPDATE tl_article SET alias=CONCAT_WS('-',alias,id) WHERE pid=? AND alias=?")
+								   ->execute($dc->id, $arrSet['alias']);
+		
+	}
+	
 }
