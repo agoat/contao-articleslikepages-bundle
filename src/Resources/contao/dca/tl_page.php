@@ -113,7 +113,7 @@ class tl_page_articleurls extends Backend
 		$new_records = $objSessionBag->get('new_records');
 
 		// Not a new page
-		if (!$new_records || (is_array($new_records[$dc->table]) && !in_array($dc->id, $new_records[$dc->table])))
+		if (!$new_records || !is_array($new_records[$dc->table]) || !in_array($dc->id, $new_records[$dc->table]))
 		{
 			return;
 		}
